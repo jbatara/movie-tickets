@@ -1,6 +1,17 @@
 //global variable to act as our "database" that keeps track of tickets into a shopping cart
 var shoppingCart = new Cart();
 
+function displayCart(newCartDisplay){
+  var ticketCost = $(".ticketCost");
+  var htmlTicket = "<p>Total for Cart: $" + newCartDisplay.total + "</p>";
+  //this calls on the tickets array of the newCartDisplay and runs a for each on that array
+  newCartDisplay.tickets.forEach(function(ticket){
+    htmlTicket += "<p> 1x " + ticket.movieName + ' ' + ticket.movieTime + ":00 " + "$" + ticket.ticketPrice + "</p>";
+  });
+  ticketCost.html(htmlTicket);
+}
+console.log(displayCart);
+
 // FRONT END
 $(document).ready(function() {
 
@@ -14,7 +25,7 @@ $(document).ready(function() {
     var userTicket = new TicketBreakdown(movieName, movieTime, viewerAge);
     //This utilizes the addTicket method that we defined below to add the ticket to the global shopping cart (it pushes to the array under the hood)
     shoppingCart.addTicket(userTicket);
-    console.log(shoppingCart);
+    displayCart(shoppingCart);
   });
 
 });
@@ -38,6 +49,8 @@ function TicketBreakdown(movieName, movieTime, viewerAge) {
 
 Cart.prototype.addTicket = function(ticket) {
   this.tickets.push(ticket);
+  //every time we add a ticket, we will update the total for the cart
+  this.total += ticket.ticketPrice;
 }
 
 //This method calculates the price by decsending order of importance: age is cheapest, followed by any time before 5, followed by regular price ticket
